@@ -1,0 +1,45 @@
+package droolshelloworld;
+
+import  droolshelloworld.DroolsHelper.error;
+import  droolshelloworld.DroolsHelper.ok;
+
+
+
+rule "Account balance is less than 100"
+	no-loop
+	dialect "java" 
+ when
+  $account : Account( balance < 100 ) // condition
+ then
+  error(kcontext, $account); // consequence 
+                             //NOTE the kcontext is provided by drools
+end
+
+rule "Account balance is More than 100"
+no-loop
+ when
+   $account :Account( balance > 100 ) // condition
+ then
+  ok(kcontext, $account); // consequence
+                          //NOTE the kcontext is provided by drools
+end
+
+rule "Bonus OK"
+	no-loop
+	dialect "java"
+	when
+		$account : Account(balance > 10)
+		$b : Bonus()
+	then
+		modify($account){
+			 setBalance((long)($account.getBalance() + $b.getAmmount()))
+		};
+end
+
+rule "Bonus Exception"
+	when
+		$b : Bonus( ammount > 90)
+	then
+		System.out.println("Bonus Exception: " + $b.getAmmount());
+end
+

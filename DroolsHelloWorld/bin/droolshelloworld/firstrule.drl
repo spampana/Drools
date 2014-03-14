@@ -1,0 +1,81 @@
+package droolshelloworld
+ 
+import droolshelloworld.RoolVO;
+import java.util.logging.Level
+ 
+global java.util.logging.Logger logger;
+
+ 
+rule "Basic Rule"
+  
+ when
+ $vo : RoolVO( stringValue == "Learning to drool",$booleanVal : booleanValue )
+ eval( $booleanVal )
+ then 
+        System.out.println( " IN First Rule" ); 
+ $vo.setStringValue("Done."); 
+end
+
+
+rule "Use a Collection"
+ when
+  $vo : RoolVO( listValue contains  "items" )
+ then  
+  System.out.println( "IN Collection  Rule" );
+  $vo.setStringValue("Done.");
+  
+  //logger.log(Level.INFO,"Used a collection");
+end
+
+
+rule "Use a Regular Expression"
+ when
+  $vo : RoolVO( stringValue matches  "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)")
+ then  
+  $vo.setStringValue("Done.");
+  System.out.println("Found the date with a regular expression dd/mm/yyyy");
+  //logger.log(Level.INFO,"Found the date with a regular expression dd/mm/yyyy");
+end
+
+
+rule "Use a Global "
+  
+ when
+  $vo : RoolVO( stringValue == "Global")
+ then  
+  $vo.setStringValue("Done.");
+  //logger.log(Level.INFO,"Logging with a global"); 
+  System.out.println("Use a Global");
+end
+/*
+
+The package, and import keyword are self explanatory, 
+what happens after the when is not.
+What is happening in "$vo : RoolVO( stringValue == 'Learning to drool', $booleanVal : booleanValue )" broken down actually is:
+
+stringValue == "Learning to drool" – 
+This is a constraint that allows us to find all RoolVO objects known to the knowledge base 
+that have the getStringValue() value equals to "Learning to drool". 
+If there are multiple instances of RoolVO that comply we will run this rule 
+more than once, these are also referred to as matched objects. 
+You can also have multiple constraints separated by a ",".
+
+$booleanVal : booleanValue – 
+We are declaring a new local variable of type boolean called $booleanVal and 
+gets it value from isBooleanValue.
+
+$vo : RoolVO – 
+We are declaring a new local variable of type RoolVO called $vo.
+
+The next line:
+
+"eval( $booleanVal )" - 
+Evaluates the boolean variable, this needs to evaluate to true 
+for the 'then' part of the rule to be called.
+Then:
+System.out.println( "First Rule" ); – Standard sys out.
+$vo.setStringValue("Done."); - 
+Sets the String value on the current RoolVO object that matched the constraints 
+to Done
+
+*/

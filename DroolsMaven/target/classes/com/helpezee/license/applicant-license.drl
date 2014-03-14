@@ -1,0 +1,17 @@
+package com.helpezee.license
+ 
+import com.helpezee.license.ApplicantForm;
+import com.helpezee.license.Applicant;
+import com.helpezee.license.ApplicantDao;
+import com.helpezee.license.ApplicantDaoImpl;
+ 
+global ApplicantDao applicantDao;
+  
+rule "is eligible for licence"
+when
+   $a : ApplicantForm();
+   $applicant: Applicant( age < 21 ) from applicantDao.findApplicant($a.getApplicantId());
+then
+	System.out.println("Inside the drl");
+   $a.setEligible( false );
+end
