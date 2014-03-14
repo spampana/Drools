@@ -1,0 +1,26 @@
+template header
+rules
+age
+ 
+package com.helpezee.license;
+ 
+import com.helpezee.license.ApplicantForm;
+import com.helpezee.license.Applicant;
+import com.helpezee.license.ApplicantDao;
+import com.helpezee.license.ApplicantDaoImpl;
+ 
+global ApplicantDao applicantDao;
+ 
+template "license-rules"
+ 
+   
+rule "@{rules}_@{row.rowNumber}"
+when
+   $a : ApplicantForm();
+   $applicant: Applicant( age < @{age} ) from applicantDao.findApplicant($a.getApplicantId());
+then
+  System.out.println("inside");
+   $a.setEligible( false );
+end
+ 
+end template
